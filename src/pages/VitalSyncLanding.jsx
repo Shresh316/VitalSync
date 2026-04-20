@@ -135,17 +135,23 @@ export default function VitalSyncLanding() {
           </p>
           <div className="flex flex-col items-center gap-4 justify-center">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-gradient-to-r from-blue-700 via-blue-600 to-emerald-500 text-white px-8 py-4 rounded-full hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg font-medium">
+              <a 
+                href="/home"
+                className="bg-gradient-to-r from-blue-700 via-blue-600 to-emerald-500 text-white px-8 py-4 rounded-full hover:shadow-xl hover:scale-105 transition-all duration-300 text-lg font-medium flex items-center justify-center"
+              >
                 {t("accessData")}
-              </button>
-              <button className="text-gray-700 px-8 py-4 rounded-full border border-gray-300 hover:border-blue-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+              </a>
+              <a 
+                href="/home"
+                className="text-gray-700 px-8 py-4 rounded-full border border-gray-300 hover:border-blue-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 flex items-center justify-center"
+              >
                 {t("explore")}
-              </button>
+              </a>
             </div>
 
             <a
               href="/home"
-              className="mt-4 bg-white text-blue-700 hover:bg-blue-50 hover:text-blue-800 px-10 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 border-2 border-blue-700 shadow-lg animate-pulse"
+              className="mt-4 bg-white text-blue-700 hover:bg-blue-50 hover:text-blue-800 px-10 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all duration-300 border-2 border-blue-700 shadow-lg animate-pulse flex items-center justify-center"
             >
               {t("getStarted")}
             </a>

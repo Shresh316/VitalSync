@@ -14,10 +14,12 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import Navbar from "../../components/Navbar";
+import { useNavigate } from "react-router-dom";
 import { Send, Eye, CheckCircle, Clock, Target } from "lucide-react";
 
 export default function DoctorDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [doctorData, setDoctorData] = useState(null);
   const [purpose, setPurpose] = useState("");
@@ -27,9 +29,11 @@ export default function DoctorDashboard() {
   const [activeTab, setActiveTab] = useState("reports"); // "reports" or "goals"
 
   useEffect(() => {
-    const fetchDoctorData = async () => {
-      const user = auth.currentUser;
-      if (!user) return;
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        navigate("/home");
+        return;
+      }
 
       try {
         const docSnap = await getDoc(doc(db, "doctors", user.uid));
@@ -38,14 +42,17 @@ export default function DoctorDashboard() {
             ...docSnap.data(),
             uid: user.uid,
           });
+        } else {
+          // If not a doctor, maybe redirect to patient dashboard or onboarding
+          navigate("/onboarding");
         }
       } catch (err) {
         console.error("Error fetching doctor data:", err);
       }
-    };
+    });
 
-    fetchDoctorData();
-  }, []);
+    return () => unsubscribe();
+  }, [navigate]);
 
   const checkApprovedConsents = async (patientId) => {
     if (!doctorData) return [];

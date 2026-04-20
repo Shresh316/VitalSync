@@ -11,15 +11,17 @@ export default function Navbar({ userType = "patient" }) {
 
   const isLandingPage = location.pathname === "/landing-page";
 
-  const links = [
-
-
-    { label: t("dashboard") || "Dashboard", path: "dashboard" },
-    { label: t("profile") || "Profile", path: "profile" },
-    { label: t("Vaccine") || "Vaccine", path: "vaccine" },
-    { label: t("contact") || "Contact", path: "contact" },
- 
-  ];
+  const links = userType === "patient" 
+    ? [
+        { label: t("dashboard") || "Dashboard", path: "dashboard" },
+        { label: t("profile") || "Profile", path: "profile" },
+        { label: t("Vaccine") || "Vaccine", path: "vaccine" },
+        { label: t("contact") || "Contact", path: "contact" },
+      ]
+    : [
+        { label: t("dashboard") || "Dashboard", path: "dashboard" },
+        { label: t("profile") || "Profile", path: "profile" },
+      ];
 
   const basePath = userType === "patient" ? "/patient" : "/doctor";
 

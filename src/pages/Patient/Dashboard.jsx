@@ -24,6 +24,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { getContract } from "../../utils/vitalSyncContract";
 import { ethers } from "ethers";
 import { nanoid } from "nanoid";
+import { useNavigate } from 'react-router-dom';
 import { Chart, registerables } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -69,6 +70,7 @@ const getStatusIcon = (type) => {
 };
 
 const PatientDashboard = () => {
+  const navigate = useNavigate();
   // Add this state variable at the top of your component with other state declarations
 const [showCharts, setShowCharts] = useState(false);
  // const [patientName, setPatientName] = useState("Patient");
@@ -451,7 +453,10 @@ const [showCharts, setShowCharts] = useState(false);
   // Consent requests listener
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (!user) return;
+      if (!user) {
+        navigate("/home");
+        return;
+      }
       const consentRef = collection(db, "patients", user.uid, "consentRequests");
       
       onSnapshot(consentRef, async (querySnapshot) => {

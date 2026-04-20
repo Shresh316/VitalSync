@@ -47,22 +47,31 @@ const DoctorProfile = () => {
   };
 
   useEffect(() => {
-    const fetchDoctorData = async () => {
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const docRef = doc(db, "doctors", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setDoctorData(docSnap.data());
-      } else {
-        alert("Doctor data not found.");
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        setLoading(false);
+        navigate("/home");
+        return;
       }
-      setLoading(false);
-    };
 
-    fetchDoctorData();
-  }, []);
+      try {
+        const docRef = doc(db, "doctors", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setDoctorData(docSnap.data());
+        } else {
+          // If data not found, maybe they haven't finished onboarding
+          navigate("/doctor/onboarding");
+        }
+      } catch (error) {
+        console.error("Error fetching doctor data:", error);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center text-lg text-slate-700">Loading profile...</div>;

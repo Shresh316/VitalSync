@@ -45,31 +45,40 @@ const PatientProfile = () => {
   };
 
   useEffect(() => {
-    const fetchPatientData = async () => {
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const docRef = doc(db, "patients", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-
-        if (!data.uniqueId) {
-          const newId = generateUniqueId();
-          await updateDoc(docRef, { uniqueId: newId });
-          data.uniqueId = newId;
-        }
-
-        setPatientData(data);
-        setFormData(data);
-      } else {
-        alert("Patient data not found.");
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        setLoading(false);
+        navigate("/home");
+        return;
       }
-      setLoading(false);
-    };
 
-    fetchPatientData();
-  }, []);
+      try {
+        const docRef = doc(db, "patients", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+
+          if (!data.uniqueId) {
+            const newId = generateUniqueId();
+            await updateDoc(docRef, { uniqueId: newId });
+            data.uniqueId = newId;
+          }
+
+          setPatientData(data);
+          setFormData(data);
+        } else {
+          // If data not found, maybe they haven't finished onboarding
+          navigate("/onboarding");
+        }
+      } catch (error) {
+        console.error("Error fetching patient data:", error);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
 
   const handleSave = async () => {
     const user = auth.currentUser;

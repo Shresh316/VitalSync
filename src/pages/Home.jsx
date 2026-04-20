@@ -23,6 +23,31 @@ export default function Home() {
 
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const doctorRef = doc(db, "doctors", user.uid);
+        const patientRef = doc(db, "patients", user.uid);
+
+        const [doctorSnap, patientSnap] = await Promise.all([
+          getDoc(doctorRef),
+          getDoc(patientRef),
+        ]);
+
+        if (doctorSnap.exists()) {
+          const doctorData = doctorSnap.data();
+          const isOnboarded = !!doctorData.specialization;
+          navigate(isOnboarded ? "/doctor/profile" : "/doctor/onboarding");
+        } else if (patientSnap.exists()) {
+          const patientData = patientSnap.data();
+          const isOnboarded = !!patientData.age;
+          navigate(isOnboarded ? "/patient/profile" : "/onboarding");
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
+
   const handleLoginClick = (type) => {
     setUserType(type);
     setShowLoginForm(true);
@@ -158,7 +183,7 @@ export default function Home() {
 
           {/* Login Form */}
           {activeTab === "login" && (
-            <div className="space-y-4">
+            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
               <div className="space-y-2">
                 <label>Email</label>
                 <input type="email" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} placeholder="Enter your email" className="w-full border border-gray-300 p-2 rounded" />
@@ -167,15 +192,15 @@ export default function Home() {
                 <label>Password</label>
                 <input type="password" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} placeholder="Enter your password" className="w-full border border-gray-300 p-2 rounded" />
               </div>
-              <button onClick={handleLogin} className="w-full py-2 text-white rounded" style={{ background: "linear-gradient(to right, #0d9488, #06b6d4)" }}>
+              <button type="submit" className="w-full py-2 text-white rounded" style={{ background: "linear-gradient(to right, #0d9488, #06b6d4)" }}>
                 Login
               </button>
-            </div>
+            </form>
           )}
 
           {/* Signup Form */}
           {activeTab === "signup" && (
-            <div className="space-y-4">
+            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSignup(); }}>
               <div className="space-y-2">
                 <label>Full Name</label>
                 <input type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Enter your name" className="w-full border border-gray-300 p-2 rounded" />
@@ -198,10 +223,10 @@ export default function Home() {
                   <input type="text" value={licenseNumber} onChange={(e) => setLicenseNumber(e.target.value)} placeholder="Enter license number" className="w-full border border-gray-300 p-2 rounded" />
                 </div>
               )}
-              <button onClick={handleSignup} className="w-full py-2 text-white rounded" style={{ background: "linear-gradient(to right, #0d9488, #06b6d4)" }}>
+              <button type="submit" className="w-full py-2 text-white rounded" style={{ background: "linear-gradient(to right, #0d9488, #06b6d4)" }}>
                 Sign Up
               </button>
-            </div>
+            </form>
           )}
 
           {/* Benefits */}
