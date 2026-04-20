@@ -11,18 +11,18 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "backend/index.js"
+      "source": "/api/(.*)",
+      "destination": "backend/index.js"
     },
     {
-      "src": "/analyze",
-      "dest": "backend/index.js"
+      "source": "/analyze",
+      "destination": "backend/index.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/((?!api/|analyze).*)",
+      "destination": "/index.html"
     }
   ]
 }
