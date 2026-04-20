@@ -16,7 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json()); // Required to parse JSON body
 
-app.use("/analyze", consentAnalysis); 
+app.use("/api/analyze", consentAnalysis); 
 app.use("/api/insights", healthInsights); 
 app.use("/api/preventive-advice", preventiveAdvice);
 app.use("/api/visual-insights", visualInsights);

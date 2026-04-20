@@ -33,6 +33,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
 // Initialize Chart.js
 Chart.register(...registerables);
 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:4000' : '');
+
 const hashFile = async (file) => {
   const arrayBuffer = await file.arrayBuffer();
   const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
@@ -97,7 +99,7 @@ const [showCharts, setShowCharts] = useState(false);
     
     try {
       setChartError(null);
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/visual-insights`, {
+      const response = await fetch(`${API_BASE_URL}/api/visual-insights`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ patientId: auth.currentUser.uid })
@@ -164,7 +166,7 @@ const [showCharts, setShowCharts] = useState(false);
         message: "Generating overall preventive advice...",
       });
   
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/preventive-advice`, {
+      const res = await fetch(`${API_BASE_URL}/api/preventive-advice`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -209,7 +211,7 @@ const [showCharts, setShowCharts] = useState(false);
         message: "Generating AI preventive advice...",
       });
   
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/preventive-advice`, {
+      const res = await fetch(`${API_BASE_URL}/api/preventive-advice`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -273,7 +275,7 @@ const [showCharts, setShowCharts] = useState(false);
         textPreview: text.substring(0, 100) + "..."
       });
 
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/insights`, {
+      const res = await fetch(`${API_BASE_URL}/api/insights`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -337,7 +339,7 @@ const [showCharts, setShowCharts] = useState(false);
       setGeneratingOverall(true);
       setUploadStatus({ type: "info", message: "Generating overall health insights..." });
 
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/insights`, {
+      const res = await fetch(`${API_BASE_URL}/api/insights`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -473,7 +475,7 @@ const [showCharts, setShowCharts] = useState(false);
               }
 
               try {
-                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/analyze`, {
+                const res = await fetch(`${API_BASE_URL}/api/analyze`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({

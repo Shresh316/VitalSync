@@ -17,6 +17,8 @@ import {
 // Setup worker
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || (import.meta.env.DEV ? 'http://localhost:4000' : '');
+
 export default function Home() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [numPages, setNumPages] = useState(null);
@@ -47,7 +49,7 @@ export default function Home() {
 
   const generateInsights = async (text, fileName) => {
   try {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/insights`, {
+    const res = await fetch(`${API_BASE_URL}/api/insights`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
