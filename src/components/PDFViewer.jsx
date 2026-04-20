@@ -47,7 +47,7 @@ export default function Home() {
 
   const generateInsights = async (text, fileName) => {
   try {
-    const res = await fetch("http://localhost:4000/api/insights", {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'}/api/insights`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

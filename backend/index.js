@@ -23,6 +23,10 @@ app.use("/api/visual-insights", visualInsights);
 app.use("/api/vaccine-advisor", vaccineAdvisor);
 app.use("/api/appointments", appointments);
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`AI Consent Bot running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`AI Consent Bot running on port ${PORT}`);
+  });
+}
+
+export default app;
