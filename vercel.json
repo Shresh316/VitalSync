@@ -21,7 +21,7 @@
       "destination": "backend/index.js"
     },
     {
-      "source": "/((?!api/|analyze).*)",
+      "source": "/((?!api/|analyze|src/|node_modules/|@|.*\\.).*)",
       "destination": "/index.html"
     }
   ]
